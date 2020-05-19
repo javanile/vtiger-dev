@@ -7,8 +7,8 @@ versions=(
 for version in "${versions[@]}"; do
   mkdir -p ${version}
   sed -e 's!%{version}!'"${version}"'!' Dockerfile.template > ${version}/Dockerfile
-  #cp dataset.sh ${version}/dataset.sh
-  #chmod +x ${version}/dataset.sh
+  cp debug.sh ${version}/debug.sh
+  chmod +x ${version}/debug.sh
   docker build -t javanile/vtiger-dev:${version} ${version}
   docker push javanile/vtiger-dev:${version}
 done
