@@ -1,0 +1,4 @@
+
+update:
+	bash update.sh
+
