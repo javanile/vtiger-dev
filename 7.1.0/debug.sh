@@ -6,6 +6,13 @@ debug_file=.debugfile
 target_dir=/var/www/html
 watch_dir=/app/.debug
 
+inotifywait=inotifywait
+if [[ "$@" == *"--polling"* ]]; then
+    inotifywait=inotifywait-polling
+else
+    echo "NOTICE: Use '--polling' due to unsupported MS Windows filesystem."
+fi
+
 ## Create watch_dir
 if [[ ! -d ${watch_dir} ]]; then
     mkdir ${watch_dir}
@@ -40,7 +47,7 @@ process_debug_file () {
 echo "Add your file names on '.debug/.debugfile'"
 echo "Watching for debug... (Stop with [Ctrl+C])"
 process_debug_file
-inotifywait -q -r -e moved_to,create -m ${watch_dir} |
+${inotifywait} -q -r -e moved_to,create,modify -m ${watch_dir} |
 while read -r directory events current_file; do
     #echo "${events} ${directory} ${current_file}"
     if [[ "${current_file}" = "${debug_file}" ]]; then
