@@ -1,5 +1,6 @@
 FROM javanile/vtiger:%{version}
 
+ENV COMPOSER_ALLOW_SUPERUSER="1"
 ENV XDEBUG_CONFIG="xdebug.idekey=''"
 
 RUN apt-get update && apt-get -y upgrade && \
