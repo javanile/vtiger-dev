@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+
+  vtiger:
+    build: 7.1.0
+    environment:
+      - VT_ENV=dev
+      - VT_DEBUG=true
+      - MYSQL_HOST=mysql
+      - MYSQL_DATABASE=vtiger
+      - MYSQL_ROOT_PASSWORD=secret
+    volumes:
+      ## Project
+      - .:/app
+      ## Persistence
+      - vtiger:/var/lib/vtiger
+    ports:
+      - 8080:80
+    links:
+      - mysql
+      - phpmyadmin
+      - xdebug
+
+  mysql:
+    image: javanile/mysql:5.7.28
+    command: --sql-mode=
+    environment:
+      - MYSQL_DATABASE=vtiger
+      - MYSQL_ROOT_PASSWORD=secret
+    volumes:
+      - ./dataset:/dataset:rw
+      - mysql:/var/lib/mysql:rw
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8081:80
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=secret
+    links:
+      - mysql
+
+  docker-host:
+    image: qoomon/docker-host
+    cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
+    restart: on-failure
+
+volumes:
+  mysql:
+  vtiger:
