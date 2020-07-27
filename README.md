@@ -21,3 +21,51 @@ services:
     cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
     restart: on-failure   
 ```
+
+In addiction add `docker-host` in section `links` of your `vtiger` service.
+
+## How to use
+
+This image will be used for Debugging
+
+### Debugging
+
+This image was provided with ad Debug tool for file inside container (generally not visible by developer)
+
+#### Test if debug works
+
+Run the following command with expected output (it keep alive during development)
+
+```
+$ docker-compose exec vtiger 
+Add your file names on '.debug/.debugfile'
+Watching for debug... (Stop with [Ctrl+C])
+```
+
+Now edit thie file `.debug/.debugfile` and add the following line
+
+```
+## Config
+config.inc.php
+```
+
+After you save you must see it on keep-alive debug console
+```
+Add your file names on '.debug/.debugfile'
+Watching for debug... (Stop with [Ctrl+C])
++ config.inc.php
+> config.inc.php
+```
+
+Now the file `config.inc.php` is ready and connected to your debugging tool, place your `var_dump($_GET)` everywhere.
+
+Look to your browser if you see something like this
+
+```
+array(3) (
+    "module" => "Users",
+    "action" => "Login",
+)
+```
+
+It works perfectly.
