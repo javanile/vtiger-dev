@@ -1,6 +1,6 @@
 # vtiger-dev
 
-This the right image for your Vtiger Development Environment.
+This is the right image for your **VDE** (Vtiger Development Environment)
 
 ## Installation
 
