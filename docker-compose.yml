@@ -20,7 +20,7 @@ services:
     links:
       - mysql
       - phpmyadmin
-      - xdebug
+      - docker-host
 
   mysql:
     image: javanile/mysql:5.7.28
