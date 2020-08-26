@@ -2,9 +2,10 @@
 set -e
 
 ## Settings
+debug_dir=debug
 debugfile=Debugfile
 target_dir=/var/www/html
-watch_dir=/app/debug
+watch_dir=/app/${debug_dir}
 
 inotifywait=inotifywait
 if [[ "$@" == *"--polling"* ]]; then
@@ -12,8 +13,6 @@ if [[ "$@" == *"--polling"* ]]; then
 else
     echo "NOTICE: Use '--polling' due to unsupported MS Windows filesystem."
 fi
-
-echo "Preparing 'debug' directory..."
 
 ## Create watch_dir
 if [[ ! -d ${watch_dir} ]]; then
@@ -27,7 +26,12 @@ if [[ ! -f ${watch_dir}/${debugfile} ]]; then
 fi
 
 ## Copy all source files on
+echo "Preparing 'debug' directory..."
 cp -R /var/www/html/* ${watch_dir}
+find * -type f -not -path "${debug_dir}/*" > ${watch_dir}/.debugignore
+while IFS= read file || [[ -n "${file}" ]]; do
+    rm -f ${watch_dir}/${file}
+done < ${watch_dir}/.debugignore
 chmod -R 777 ${watch_dir}
 set -f
 
