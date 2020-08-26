@@ -8,7 +8,7 @@ This is the right image for your **VDE** (Vtiger Development Environment)
 
 Add to your Dockerfile `FROM javanile/vtiger-dev:7.1.0` instead of `FROM javanile/vtiger:7.1.0`
 
-#### Step 2 - Add `docker-host` service on your `docker-compose.yml` (required for XDebug)
+#### Step 2 - Add `xdebug` service on your `docker-compose.yml` (required for XDebug)
 
 If you want use XDebug add the following service on `docker-compose.yml` to enable host machine routing of xdebug remote machine
 
@@ -22,7 +22,7 @@ services:
     restart: on-failure   
 ```
 
-In addiction add `xdebug` in section `links` of your `vtiger` service.
+**NOTICE:** _In addiction add `xdebug` in section `links` of your `vtiger` service._
 
 ## How to use
 
@@ -37,24 +37,21 @@ This image was provided with ad Debug tool for file inside container (generally 
 Run the following command with expected output (it keep alive during development)
 
 ```
-$ docker-compose exec vtiger 
-Add your file names on '.debug/.debugfile'
+$ docker-compose exec vtiger debug 
+Preparing 'debug' directory...
+Add your file settings on 'debug/Debugfile'
 Watching for debug... (Stop with [Ctrl+C])
 ```
 
-Now edit thie file `.debug/.debugfile` and add the following line
+**NOTICE:** _If you want more control try to edit the file `debug/Debugfile` and add the following line._
+
+Your are ready to change your files in the IDE (eg. `config.inc.php`) and keep-alive debug console
 
 ```
-## Config
-config.inc.php
-```
-
-After you save you must see it on keep-alive debug console
-```
+Preparing 'debug' directory...
 Add your file names on '.debug/.debugfile'
 Watching for debug... (Stop with [Ctrl+C])
-+ config.inc.php
-> config.inc.php
+> Updated: config.inc.php
 ```
 
 Now the file `config.inc.php` is ready and connected to your debugging tool, place your `var_dump($_GET)` everywhere.

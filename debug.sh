@@ -67,7 +67,7 @@ while read -r directory events current_file; do
             [[ "${file::1}" == "#" ]] && continue
             if [[ "${directory}${current_file}" = "${watch_dir}/${file}" || ${file} = "*" ]]; then
                 exact_file=$(echo "${directory}${current_file}" | sed 's|^'${watch_dir}/'||')
-                echo "Update: ${exact_file}"
+                echo "> Update: ${exact_file}"
                 cp ${directory}${current_file} ${target_dir}/${exact_file}
             fi
         done < ${watch_dir}/${debugfile}
