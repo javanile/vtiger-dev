@@ -13,6 +13,7 @@ RUN curl https://phar.phpunit.de/phpunit.phar -L -o /usr/local/bin/phpunit && ch
 RUN curl -sL https://javanile.github.io/inotifywait-polling/setup.sh | bin=/usr/local/bin/inotifywait-polling bash -
 
 COPY debug.sh /usr/local/bin/debug
-COPY php-xdebug.ini /usr/local/etc/php/conf.d/php-xdebug.ini
+COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+COPY xdebug-test.php /var/www/html/xdebug-test.php
 
 RUN echo "<?php phpinfo();" > /var/www/html/phpinfo.php

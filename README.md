@@ -16,13 +16,13 @@ If you want use XDebug add the following service on `docker-compose.yml` to enab
 services:
   .
   .
-  docker-host:
-    image: qoomon/docker-host
+  xdebug:
+    image: javanile/xdebug
     cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
     restart: on-failure   
 ```
 
-In addiction add `docker-host` in section `links` of your `vtiger` service.
+In addiction add `xdebug` in section `links` of your `vtiger` service.
 
 ## How to use
 

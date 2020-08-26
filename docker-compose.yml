@@ -4,6 +4,7 @@ services:
 
   vtiger:
     build: 7.1.0
+    image: javanile/vtiger-dev:7.1.0
     environment:
       - VT_ENV=dev
       - VT_DEBUG=true
@@ -20,7 +21,7 @@ services:
     links:
       - mysql
       - phpmyadmin
-      - docker-host
+      - xdebug
 
   mysql:
     image: javanile/mysql:5.7.28
@@ -43,8 +44,8 @@ services:
     links:
       - mysql
 
-  docker-host:
-    image: qoomon/docker-host
+  xdebug:
+    image: javanile/xdebug
     cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
     restart: on-failure
 

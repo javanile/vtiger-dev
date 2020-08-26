@@ -2,9 +2,9 @@
 set -e
 
 ## Settings
-debug_file=.debugfile
+debugfile=Debugfile
 target_dir=/var/www/html
-watch_dir=/app/.debug
+watch_dir=/app/debug
 
 inotifywait=inotifywait
 if [[ "$@" == *"--polling"* ]]; then
@@ -13,22 +13,30 @@ else
     echo "NOTICE: Use '--polling' due to unsupported MS Windows filesystem."
 fi
 
+echo "Preparing 'debug' directory..."
+
 ## Create watch_dir
 if [[ ! -d ${watch_dir} ]]; then
     mkdir ${watch_dir}
-    chmod 777 ${watch_dir}
 fi
 
-## Create debug_file
-if [[ ! -f ${watch_dir}/${debug_file} ]]; then
-    touch ${watch_dir}/${debug_file}
-    chmod 777 ${watch_dir}/${debug_file}
+## Create debugfile
+if [[ ! -f ${watch_dir}/${debugfile} ]]; then
+    echo '# Debugfile' > ${watch_dir}/${debugfile}
+    echo '*' >> ${watch_dir}/${debugfile}
 fi
 
-process_debug_file () {
+## Copy all source files on
+cp -R /var/www/html/* ${watch_dir}
+chmod -R 777 ${watch_dir}
+set -f
+
+## Process debugfile
+process_debugfile () {
     while IFS= read file || [[ -n "${file}" ]]; do
-        file=$(echo ${file} | tr -d '\r')
+        file=$(echo "${file}" | tr -d '\r')
         [[ -z "${file}" ]] && continue
+        [[ "${file}" == "*" ]] && continue
         [[ "${file::1}" == "#" ]] && continue
         [[ -f ${watch_dir}/${file} ]] && continue
         echo "+ ${file}"
@@ -40,28 +48,29 @@ process_debug_file () {
         mkdir -p $(dirname ${watch_dir}/${file}) && true
         cp ${target_dir}/${file} ${watch_dir}/${file}
         chmod 777 -R ${watch_dir}
-    done < ${watch_dir}/${debug_file}
+    done < ${watch_dir}/${debugfile}
 }
 
 ## Files watcher
-echo "Add your file names on '.debug/.debugfile'"
+echo "Add your file settings on 'debug/Debugfile'"
 echo "Watching for debug... (Stop with [Ctrl+C])"
-process_debug_file
+process_debugfile
 ${inotifywait} -q -r -e moved_to,create,modify -m ${watch_dir} |
 while read -r directory events current_file; do
     #echo "${events} ${directory} ${current_file}"
-    if [[ "${current_file}" = "${debug_file}" ]]; then
-        process_debug_file
+    if [[ "${current_file}" = "${debugfile}" ]]; then
+        process_debugfile
     else
         while IFS= read file || [[ -n "${file}" ]]; do
             file=$(echo ${file} | tr -d '\r')
             [[ -z "${file}" ]] && continue
             [[ "${file::1}" == "#" ]] && continue
-            if [[ "${directory}${current_file}" = "${watch_dir}/${file}" ]]; then
-                echo "> ${file}"
-                cp ${watch_dir}/${file} ${target_dir}/${file}
+            if [[ "${directory}${current_file}" = "${watch_dir}/${file}" || ${file} = "*" ]]; then
+                exact_file=$(echo "${directory}${current_file}" | sed 's|^'${watch_dir}/'||')
+                echo "Update: ${exact_file}"
+                cp ${directory}${current_file} ${target_dir}/${exact_file}
             fi
-        done < ${watch_dir}/${debug_file}
+        done < ${watch_dir}/${debugfile}
     fi
     #echo ">>> ${filename}"
 done

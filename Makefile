@@ -2,11 +2,17 @@
 update:
 	bash update.sh
 
+up: update
+	docker-compose up --build -d vtiger
+
+debug: up
+	docker-compose exec vtiger debug
+
+xdebug: up
+	docker-compose logs -f xdebug
+
 test-debug: update
 	docker run -t -i --rm -v ${PWD}:/app javanile/vtiger-dev:7.1.0 debug
-
-test-vtiger: update
-	docker-compose up --build -d vtiger
 
 test-debug-polling: update
 	docker run -t -i --rm -v ${PWD}:/app javanile/vtiger-dev:7.1.0 debug --polling
