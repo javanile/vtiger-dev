@@ -27,7 +27,7 @@ fi
 
 ## Copy all source files on
 echo "Preparing 'debug' directory..."
-cp -R /var/www/html/* ${watch_dir}
+cp -RL /var/www/html/* ${watch_dir}
 find * -type f -not -path "${debug_dir}/*" > ${watch_dir}/.debugignore
 while IFS= read file || [[ -n "${file}" ]]; do
     rm -f ${watch_dir}/${file}
