@@ -5,6 +5,7 @@ update:
 up: update
 	docker-compose up --build -d vtiger
 
+.PHONY: debug
 debug: up
 	docker-compose exec vtiger debug
 
