@@ -26,12 +26,19 @@ if [[ ! -f ${watch_dir}/${debugfile} ]]; then
 fi
 
 ## Copy all source files on
-echo "Preparing 'debug' directory..."
+echo "Preparing 'debug' directory, it could take a few minutes..."
+echo "1. Coping files..."
 cp -RL /var/www/html/* ${watch_dir}
+echo "2. Prepare '.degugignore' file..."
 find * -type f -not -path "${debug_dir}/*" > ${watch_dir}/.debugignore
-while IFS= read file || [[ -n "${file}" ]]; do
+echo "3. Apply '.degugignore' rules..."
+while IFS= read line || [[ -n "${line}" ]]; do
+    file=$(echo ${line} | tr -d '\r')
+    [[ -z "${file}" ]] && continue
+    [[ "${file::1}" == "#" ]] && continue
     rm -f ${watch_dir}/${file}
 done < ${watch_dir}/.debugignore
+echo "4. Fix files permissions..."
 chmod -R 777 ${watch_dir}
 set -f
 
@@ -56,7 +63,7 @@ process_debugfile () {
 }
 
 ## Files watcher
-echo "Add your file settings on 'debug/Debugfile'"
+echo "Add your additional settings on 'debug/Debugfile'"
 echo "Watching for debug... (Stop with [Ctrl+C])"
 process_debugfile
 ${inotifywait} -q -r -e moved_to,create,modify -m ${watch_dir} |
