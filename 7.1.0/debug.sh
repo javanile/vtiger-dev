@@ -2,10 +2,12 @@
 set -e
 
 ## Settings
+workdir="${PWD}"
 debug_dir=debug
 debugfile=Debugfile
 target_dir=/var/www/html
 watch_dir=/app/${debug_dir}
+build_dir=$(mktemp -d -t vtiger-dev-debug-XXXXXX)
 
 inotifywait=inotifywait
 if [[ "$@" == *"--polling"* ]]; then
@@ -14,32 +16,60 @@ else
     echo "NOTICE: Use '--polling' due to unsupported MS Windows filesystem."
 fi
 
-## Create watch_dir
-if [[ ! -d ${watch_dir} ]]; then
-    mkdir ${watch_dir}
+echo ""
+echo "-------------------"
+echo " Vtiger Debug Mode"
+echo "-------------------"
+echo " - Preparing environment..."
+
+## Create build dir
+if [[ ! -d "${build_dir}/${debug_dir}" ]]; then
+    mkdir -p "${build_dir}/${debug_dir}"
 fi
 
 ## Create debugfile
-if [[ ! -f ${watch_dir}/${debugfile} ]]; then
-    echo '# Debugfile' > ${watch_dir}/${debugfile}
-    echo '*' >> ${watch_dir}/${debugfile}
+if [[ ! -f "${build_dir}/${debug_dir}/${debugfile}" ]]; then
+    echo '# Debugfile' > "${build_dir}/${debug_dir}/${debugfile}"
+    echo '*' >> "${build_dir}/${debug_dir}/${debugfile}"
 fi
 
-## Copy all source files on
-echo "Preparing 'debug' directory, it could take a few minutes..."
-echo "1. Coping files..."
-cp -RL /var/www/html/* ${watch_dir}
-echo "2. Prepare '.degugignore' file..."
-find * -type f -not -path "${debug_dir}/*" > ${watch_dir}/.debugignore
-echo "3. Apply '.degugignore' rules..."
+## Copy all source files on build
+cp -RL "${target_dir}"/* "${build_dir}/${debug_dir}"
+find * -type f -not -path "${debug_dir}/*" > "${build_dir}/${debug_dir}/.debugignore"
 while IFS= read line || [[ -n "${line}" ]]; do
     file=$(echo ${line} | tr -d '\r')
     [[ -z "${file}" ]] && continue
     [[ "${file::1}" == "#" ]] && continue
-    rm -f ${watch_dir}/${file}
-done < ${watch_dir}/.debugignore
-echo "4. Fix files permissions..."
-chmod -R 777 ${watch_dir}
+    rm -f "${build_dir}/${debug_dir}/${file}"
+done < "${build_dir}/${debug_dir}/.debugignore"
+chmod -R 777 "${build_dir}"
+cd "${build_dir}"
+zip -qq -ro debug.zip "${debug_dir}"
+rm -f /app/debug.zip
+mv debug.zip /app/debug.zip
+chmod 777 /app/debug.zip
+rm -fr "${build_dir}"
+
+echo " - Confirm your environment is ready before start..."
+
+echo ""
+echo "(1) Install a Chrome extension than configure and enable it for PHPSTORM (See: https://github.com/javanile/vtiger-dev/wiki/Chrome)"
+read -p " -> Is it ready? (y/N) " -n 1 -r
+[[ $REPLY =~ ^[Yy]$ ]] || exit 1
+echo ""
+
+echo ""
+echo "(2) Enable PhpStorm to 'Start Listening for PHP Debug Connections' (See: https://github.com/javanile/vtiger-dev/wiki/PhpStorm)"
+read -p " -> Is it ready? (y/N) " -n 1 -r
+[[ $REPLY =~ ^[Yy]$ ]] || exit 1
+echo ""
+
+echo ""
+echo "(3) Extract 'debug.zip' file into your project with command 'tar -xv debug.zip' (See: https://github.com/javanile/vtiger-dev/wiki/debug.zip)"
+read -p " -> Is it ready? (y/N) " -n 1 -r
+[[ $REPLY =~ ^[Yy]$ ]] || exit 1
+echo ""
+
 set -f
 
 ## Process debugfile
