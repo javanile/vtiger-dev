@@ -49,6 +49,7 @@ rm -f /app/debug.zip
 mv debug.zip /app/debug.zip
 chmod 777 /app/debug.zip
 rm -fr "${build_dir}"
+cd ${workdir}
 
 echo " - Confirm your environment is ready before start:"
 
@@ -65,12 +66,19 @@ read -p " -> Is it ready? (y/N) " -n 1 -r
 echo ""
 
 echo ""
-echo "(3) Extract 'debug.zip' file into your project in other terminal (See: https://github.com/javanile/vtiger-dev/wiki/debug.zip)"
-echo "    Windows 10:   tar -xv debug.zip"
-echo "    Linux/macOS:  unzip -o debug.zip"
+echo "(3) Extract 'debug.zip' file into your project with another terminal (See: https://github.com/javanile/vtiger-dev/wiki/debug.zip)"
+echo "    Windows: Right-click on file 'Show in Explorer' than right-click on file 'Extract here' (or cmd.exe: tar -xvf debug.zip)"
+echo "    Linux/macOS: unzip -o debug.zip"
 read -p " -> Is it ready? (y/N) " -n 1 -r
 [[ $REPLY =~ ^[Yy]$ ]] || exit 1
 echo ""
+
+## Final check before start
+if [[ ! -d "${watch_dir}" ]]; then
+    echo ""
+    echo "ERROR: Missing '${debug_dir}' into your project, be sure to extract 'debug.zip' file in root of the project."
+    exit 1
+fi
 
 set -f
 
