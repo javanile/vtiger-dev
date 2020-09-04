@@ -17,10 +17,10 @@ else
 fi
 
 echo ""
-echo "-------------------"
-echo " Vtiger Debug Mode"
-echo "-------------------"
-echo " - Preparing environment..."
+echo "======================="
+echo "## Vtiger Debug Mode ##"
+echo "======================="
+echo " - Preparing development environment..."
 
 ## Create build dir
 if [[ ! -d "${build_dir}/${debug_dir}" ]]; then
@@ -65,7 +65,9 @@ read -p " -> Is it ready? (y/N) " -n 1 -r
 echo ""
 
 echo ""
-echo "(3) Extract 'debug.zip' file into your project with command 'tar -xv debug.zip' (See: https://github.com/javanile/vtiger-dev/wiki/debug.zip)"
+echo "(3) Extract 'debug.zip' file into your project in other terminal (See: https://github.com/javanile/vtiger-dev/wiki/debug.zip)"
+echo "    Windows 10:   tar -xv debug.zip"
+echo "    Linux/macOS:  unzip -o debug.zip"
 read -p " -> Is it ready? (y/N) " -n 1 -r
 [[ $REPLY =~ ^[Yy]$ ]] || exit 1
 echo ""
@@ -93,6 +95,7 @@ process_debugfile () {
 }
 
 ## Files watcher
+echo ""
 echo "Add your additional settings on 'debug/Debugfile'"
 echo "Watching for debug... (Stop with [Ctrl+C])"
 process_debugfile
