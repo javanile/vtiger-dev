@@ -16,6 +16,11 @@ else
     echo "NOTICE: Use '--polling' due to unsupported MS Windows filesystem."
 fi
 
+watch_enabled=1
+if [[ "$@" == *"--no-watch"* ]]; then
+    watch_enabled=
+fi
+
 echo ""
 echo "======================="
 echo "## Vtiger Debug Mode ##"
@@ -65,19 +70,21 @@ read -p " -> Is it ready? (y/N) " -n 1 -r
 [[ $REPLY =~ ^[Yy]$ ]] || exit 1
 echo ""
 
-echo ""
-echo "(3) Extract 'debug.zip' file into your project with another terminal (See: https://github.com/javanile/vtiger-dev/wiki/debug.zip)"
-echo "    Windows: Right-click on file 'Show in Explorer' than right-click on file 'Extract here' (or cmd.exe: tar -xvf debug.zip)"
-echo "    Linux/macOS: unzip -o debug.zip"
-read -p " -> Is it ready? (y/N) " -n 1 -r
-[[ $REPLY =~ ^[Yy]$ ]] || exit 1
-echo ""
-
-## Final check before start
-if [[ ! -d "${watch_dir}" ]]; then
+if [[ -z "${watch_enabled}" ]]; then
     echo ""
-    echo "ERROR: Missing '${debug_dir}' into your project, be sure to extract 'debug.zip' file in root of the project."
-    exit 1
+    echo "(3) Extract 'debug.zip' file into your project with another terminal (See: https://github.com/javanile/vtiger-dev/wiki/debug.zip)"
+    echo "    Windows: Right-click on file 'Show in Explorer' than right-click on file 'Extract here' (or cmd.exe: tar -xvf debug.zip)"
+    echo "    Linux/macOS: unzip -o debug.zip"
+    read -p " -> Is it ready? (y/N) " -n 1 -r
+    [[ $REPLY =~ ^[Yy]$ ]] || exit 1
+    echo ""
+
+    ## Final check before start
+    if [[ ! -d "${watch_dir}" ]]; then
+        echo ""
+        echo "ERROR: Missing '${debug_dir}' into your project, be sure to extract 'debug.zip' file in root of the project."
+        exit 1
+    fi
 fi
 
 set -f
@@ -103,26 +110,30 @@ process_debugfile () {
 }
 
 ## Files watcher
-echo ""
-echo "Add your additional settings on 'debug/Debugfile'"
-echo "Watching for debug... (Stop with [Ctrl+C])"
-process_debugfile
-${inotifywait} -q -r -e moved_to,create,modify -m ${watch_dir} |
-while read -r directory events current_file; do
-    #echo "${events} ${directory} ${current_file}"
-    if [[ "${current_file}" = "${debugfile}" ]]; then
-        process_debugfile
-    else
-        while IFS= read file || [[ -n "${file}" ]]; do
-            file=$(echo ${file} | tr -d '\r')
-            [[ -z "${file}" ]] && continue
-            [[ "${file::1}" == "#" ]] && continue
-            if [[ "${directory}${current_file}" = "${watch_dir}/${file}" || ${file} = "*" ]]; then
-                exact_file=$(echo "${directory}${current_file}" | sed 's|^'${watch_dir}/'||')
-                echo "> Update: ${exact_file}"
-                cp "${directory}${current_file}" "${target_dir}/${exact_file}" && true
-            fi
-        done < ${watch_dir}/${debugfile}
-    fi
-    #echo ">>> ${filename}"
-done
+if [[ -z "${watch_enabled}" ]]; then
+    echo ""
+    echo "Add your additional settings on 'debug/Debugfile'"
+    echo "Watching for debug... (Stop with [Ctrl+C])"
+    process_debugfile
+    ${inotifywait} -q -r -e moved_to,create,modify -m ${watch_dir} |
+    while read -r directory events current_file; do
+        #echo "${events} ${directory} ${current_file}"
+        if [[ "${current_file}" = "${debugfile}" ]]; then
+            process_debugfile
+        else
+            while IFS= read file || [[ -n "${file}" ]]; do
+                file=$(echo ${file} | tr -d '\r')
+                [[ -z "${file}" ]] && continue
+                [[ "${file::1}" == "#" ]] && continue
+                if [[ "${directory}${current_file}" = "${watch_dir}/${file}" || ${file} = "*" ]]; then
+                    exact_file=$(echo "${directory}${current_file}" | sed 's|^'${watch_dir}/'||')
+                    echo "> Update: ${exact_file}"
+                    cp "${directory}${current_file}" "${target_dir}/${exact_file}" && true
+                fi
+            done < ${watch_dir}/${debugfile}
+        fi
+        #echo ">>> ${filename}"
+    done
+else
+    echo "It is time to debug... (Good job)"
+fi
