@@ -3,3 +3,4 @@
 debug/
 *.inotifywait
 debug.zip
+.pwd.var
