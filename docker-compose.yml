@@ -3,8 +3,8 @@ version: '3'
 services:
 
   vtiger:
-    build: 7.1.0
-    image: javanile/vtiger-dev:7.1.0
+    build: ${version}
+    image: javanile/vtiger-dev:${version}
     environment:
       - VT_ENV=dev
       - VT_DEBUG=true
