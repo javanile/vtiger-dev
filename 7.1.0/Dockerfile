@@ -1,7 +1,7 @@
 FROM javanile/vtiger:7.1.0
 
 RUN apt-get update && apt-get -y upgrade && \
-    apt-get install -y --no-install-recommends inotify-tools wget zip unzip vim nano iputils-ping gettext && \
+    apt-get install -y --no-install-recommends inotify-tools wget zip unzip vim nano iputils-ping gettext mysql-client && \
 	pecl install -f xdebug-2.7.2 && \
 	docker-php-ext-enable xdebug && \
 	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

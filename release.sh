@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+docker login
+
 source versions.sh
 
 for version in "${versions[@]}"; do
