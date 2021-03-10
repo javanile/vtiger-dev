@@ -2,9 +2,9 @@ FROM javanile/vtiger:7.1.0
 
 RUN apt-get update && apt-get -y upgrade && \
     apt-get install -y --no-install-recommends inotify-tools wget zip unzip vim nano iputils-ping gettext mysql-client && \
-	pecl install -f xdebug-2.7.2 && \
-	docker-php-ext-enable xdebug && \
 	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN	( pecl install -f xdebug-2.7.2 || pecl install -f xdebug-2.5.5 ) && docker-php-ext-enable xdebug
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN curl -sL -o /usr/local/bin/phpcs https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar && chmod +x /usr/local/bin/phpcs

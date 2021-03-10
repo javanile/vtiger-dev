@@ -139,5 +139,6 @@ if [[ -n "${watch_enabled}" ]]; then
         #echo ">>> ${filename}"
     done
 else
+    echo ""
     echo "It is time to debug... (Good job)"
 fi
