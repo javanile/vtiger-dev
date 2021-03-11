@@ -35,3 +35,6 @@ test-xdebug: update
 	#docker run -t -i --rm -v ${PWD}:/app javanile/vtiger-dev:7.1.0 cat /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 	#docker run -t -i --rm -v ${PWD}:/app javanile/vtiger-dev:7.1.0 php --ini
 	docker run -t -i --rm -v ${PWD}:/app javanile/vtiger-dev:7.1.0
+
+test-mysql: update up
+	docker-compose run --rm vtiger bash -c "mysql -hmysql -uroot -psecret vtiger -e 'SHOW TABLES'"
