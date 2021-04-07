@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-docker login
+docker login --username javanile
 
 source versions.sh
 
