@@ -38,3 +38,6 @@ test-xdebug: update
 
 test-mysql: update up
 	docker-compose run --rm vtiger bash -c "mysql -hmysql -uroot -psecret vtiger -e 'SHOW TABLES'"
+
+test-phpunit: update up
+	docker-compose run --rm vtiger phpunit /var/www/html/test/VtigerTest.php
