@@ -1,12 +1,10 @@
 FROM javanile/vtiger:7.1.0
 
 RUN apt-get update && apt-get -y upgrade && \
-    apt-get install -y --no-install-recommends inotify-tools wget zip unzip vim nano iputils-ping gettext mysql-client libldap2-dev && \
+    apt-get install -y --no-install-recommends inotify-tools wget zip unzip vim nano iputils-ping gettext mysql-client libldap2-dev tidy libtidy-dev && \
    	ln -s /usr/lib/x86_64-linux-gnu/libldap.so /usr/lib/libldap.so && \
-   	docker-php-ext-install ldap && \
+   	docker-php-ext-install ldap tidy && \
 	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-RUN apt-get update && apt-get install -y --no-install-recommends tidy libtidy-dev && docker-php-ext-install tidy
 
 RUN	( pecl install -f xdebug-2.7.2 || pecl install -f xdebug-2.5.5 ) && docker-php-ext-enable xdebug
 
