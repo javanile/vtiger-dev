@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+VERSION=0.$(date +%y.%U)
+
 docker login --username javanile
 
 source versions.sh
@@ -11,5 +13,5 @@ for version in "${versions[@]}"; do
 done
 
 git add .
-git commit -am "new release"
+git commit -am "Release ${VERSION}"
 git push
