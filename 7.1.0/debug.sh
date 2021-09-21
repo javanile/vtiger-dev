@@ -42,7 +42,7 @@ if [[ -n "${watch_enabled}" ]]; then
     fi
 
     ## Copy all source files on build
-    cp -RL "${target_dir}"/* "${build_dir}/${debug_dir}"
+    cp -RL "${target_dir}"/* "${build_dir}/${debug_dir}" && true
     find * -type f -not -path "${debug_dir}/*" > "${build_dir}/${debug_dir}/.debugignore"
     while IFS= read line || [[ -n "${line}" ]]; do
         file=$(echo ${line} | tr -d '\r')
