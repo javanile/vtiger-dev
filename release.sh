@@ -13,5 +13,5 @@ for version in "${versions[@]}"; do
 done
 
 git add .
-git commit -am "Release ${VERSION}"
+git commit -am "Release ${VERSION}" && true
 git push
