@@ -20,7 +20,7 @@ xdebug: up
 ## Tests
 ## =====
 test-vtiger: update
-	docker-compose up --build -d vtiger
+	docker-compose up --build --force-recreate -d vtiger
 
 test-debug: update
 	docker run -t -i --rm -v ${PWD}:/app javanile/vtiger-dev:7.1.0 debug
