@@ -11,8 +11,9 @@ RUN	( pecl install -f xdebug-2.7.2 || pecl install -f xdebug-2.5.5 ) && docker-p
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN curl -sL -o /usr/local/bin/phpcs https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar && chmod +x /usr/local/bin/phpcs
 RUN curl -sL -o /usr/local/bin/phpcbf https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar && chmod +x /usr/local/bin/phpcbf
+RUN curl -sLk -o /usr/local/bin/phpmd https://phpmd.org/static/latest/phpmd.phar && chmod +x /usr/local/bin/phpmd
 RUN curl https://phar.phpunit.de/phpunit-6.phar -skL -o /usr/local/bin/phpunit && chmod +x /usr/local/bin/phpunit
-RUN curl -sL https://javanile.github.io/inotifywait-polling/setup.sh | bin=/usr/local/bin/inotifywait-polling bash -
+RUN curl -sL https://raw.githubusercontent.com/javanile/inotifywait-polling/main/setup.sh | bin=/usr/local/bin/inotifywait-polling bash -
 
 COPY VtigerTest.php /var/www/html/VtigerTest.php
 COPY debug.sh /usr/local/bin/debug

@@ -42,3 +42,6 @@ test-mysql: update up
 
 test-phpunit: update up
 	docker-compose run --rm vtiger phpunit /var/www/html/test/VtigerTest.php
+
+test-phpmd: update up
+	docker-compose run --rm vtiger phpmd --help
