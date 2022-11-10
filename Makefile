@@ -7,6 +7,9 @@ update:
 up: update
 	docker-compose up --build -d vtiger
 
+ps:
+	docker-compose ps
+
 debug: up
 	docker-compose exec vtiger debug
 
@@ -15,6 +18,9 @@ release: update
 
 xdebug: up
 	docker-compose logs -f xdebug
+
+bash:
+	@docker-compose exec vtiger bash
 
 ## =====
 ## Tests
@@ -33,6 +39,11 @@ test-debug-disable-watch: update
 	docker run -t -i --rm -v ${PWD}:/app javanile/vtiger-dev:7.1.0 debug --disable-watch
 
 test-xdebug: update
+	#docker run -t -i --rm -v ${PWD}:/app javanile/vtiger-dev:7.1.0 cat /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+	#docker run -t -i --rm -v ${PWD}:/app javanile/vtiger-dev:7.1.0 php --ini
+	docker run -t -i --rm -v ${PWD}:/app javanile/vtiger-dev:7.1.0
+
+test-profiler: update
 	#docker run -t -i --rm -v ${PWD}:/app javanile/vtiger-dev:7.1.0 cat /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 	#docker run -t -i --rm -v ${PWD}:/app javanile/vtiger-dev:7.1.0 php --ini
 	docker run -t -i --rm -v ${PWD}:/app javanile/vtiger-dev:7.1.0
