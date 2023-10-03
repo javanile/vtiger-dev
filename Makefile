@@ -56,3 +56,6 @@ test-phpunit: update up
 
 test-phpmd: update up
 	docker-compose run --rm vtiger phpmd --help
+
+test-websocket: update up
+	uwsc -s ws://localhost:8080/websocket-test.php
