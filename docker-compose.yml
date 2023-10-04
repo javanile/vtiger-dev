@@ -18,6 +18,7 @@ services:
       - vtiger:/var/lib/vtiger
     ports:
       - 8080:80
+      - 9090:9090
     links:
       - mysql
       - phpmyadmin
