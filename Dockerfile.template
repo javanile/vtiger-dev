@@ -19,6 +19,8 @@ RUN a2enmod proxy_wstunnel
 
 RUN docker-php-ext-install sockets
 
+RUN docker-php-ext-configure pcntl --enable-pcntl && docker-php-ext-install pcntl
+
 COPY VtigerTest.php /var/www/html/VtigerTest.php
 COPY debug.sh /usr/local/bin/debug
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini

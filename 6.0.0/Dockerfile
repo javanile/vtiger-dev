@@ -15,9 +15,11 @@ RUN curl -sLk -o /usr/local/bin/phpmd https://phpmd.org/static/latest/phpmd.phar
 RUN curl https://phar.phpunit.de/phpunit-6.phar -skL -o /usr/local/bin/phpunit && chmod +x /usr/local/bin/phpunit
 RUN curl -sL https://raw.githubusercontent.com/javanile/inotifywait-polling/main/setup.sh | bin=/usr/local/bin/inotifywait-polling bash -
 
-#RUN a2enmod proxy_wstunnel
+RUN a2enmod proxy_wstunnel
 
 RUN docker-php-ext-install sockets
+
+RUN docker-php-ext-configure pcntl --enable-pcntl && docker-php-ext-install pcntl
 
 COPY VtigerTest.php /var/www/html/VtigerTest.php
 COPY debug.sh /usr/local/bin/debug
