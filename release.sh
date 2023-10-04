@@ -3,7 +3,7 @@ set -e
 
 VERSION=0.$(date +%y.%U)
 
-docker login --username javanile
+docker login --username yafb
 
 source versions.sh
 
