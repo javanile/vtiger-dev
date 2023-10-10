@@ -27,4 +27,8 @@ COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY xdebug-test.php /var/www/html/xdebug-test.php
 COPY websocket-test.php /var/www/html/websocket-test.php
 
+RUN a2enmod proxy_http
+
+RUN sed -i /etc/apache2/sites-available/000-default.conf -e 's/<\/VirtualHost>/    ProxyPassMatch "\/websocket-(52[0-2][0-9][0-9])" "ws:\/\/0.0.0.0:$1\/"\n<\/VirtualHost>/g'
+
 RUN echo "<?php phpinfo();" > /var/www/html/phpinfo.php

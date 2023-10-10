@@ -17,7 +17,7 @@ services:
       ## Persistence
       - vtiger:/var/lib/vtiger
     ports:
-      - 8080:80
+      - 8088:80
       - 9090:9090
     links:
       - mysql
@@ -37,7 +37,7 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
-      - 8081:80
+      - 8089:80
     environment:
       - PMA_HOST=mysql
       - PMA_USER=root
