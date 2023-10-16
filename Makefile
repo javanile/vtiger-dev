@@ -10,6 +10,9 @@ up: update
 ps:
 	docker-compose ps
 
+pull:
+	docker-compose pull --include-deps
+
 debug: up
 	docker-compose exec vtiger debug
 
@@ -59,3 +62,6 @@ test-phpmd: update up
 
 test-websocket: update up
 	uwsc ws://localhost:8080/websocket-test.php
+
+test-foreground: pull update up
+	docker compose up --build --force-recreate vtiger

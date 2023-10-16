@@ -4,3 +4,4 @@ debug/
 *.inotifywait
 debug.zip
 .pwd.var
+.vtiger.lock
