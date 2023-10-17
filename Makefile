@@ -4,6 +4,9 @@
 update:
 	bash update.sh
 
+build: update
+	docker-compose build vtiger
+
 up: update
 	docker-compose up --build -d vtiger
 
@@ -65,3 +68,6 @@ test-websocket: update up
 
 test-foreground: pull update up
 	docker compose up --build --force-recreate vtiger
+
+test-gd: build
+	docker compose run --rm vtiger php -r "imagejpeg();"

@@ -21,6 +21,14 @@ RUN docker-php-ext-install sockets
 
 RUN docker-php-ext-configure pcntl --enable-pcntl && docker-php-ext-install pcntl
 
+RUN apt-get update && apt-get -y upgrade && \
+    apt-get install -y --no-install-recommends libmagick++-dev libmagickwand-dev libpq-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libonig-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg=/usr/include/ --enable-gd
+RUN docker-php-ext-install gd
+RUN docker-php-ext-enable gd
+
 COPY VtigerTest.php /var/www/html/VtigerTest.php
 COPY debug.sh /usr/local/bin/debug
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini

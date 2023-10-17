@@ -1,7 +1,7 @@
 FROM javanile/vtiger:7.1.0-php7.4
 
 RUN apt-get update && apt-get -y upgrade && \
-    apt-get install -y --no-install-recommends rsync inotify-tools wget zip unzip vim nano iputils-ping libxml2-dev gettext mariadb-client libldap2-dev tidy libtidy-dev && \
+    apt-get install -y --no-install-recommends rsync inotify-tools wget zip unzip vim nano iputils-ping libxml2-dev gettext mariadb-client libldap2-dev tidy libtidy-dev libmagick++-dev libmagickwand-dev libpq-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libonig-dev && \
    	ln -s /usr/lib/x86_64-linux-gnu/libldap.so /usr/lib/libldap.so && \
    	docker-php-ext-install ldap tidy soap && \
 	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -20,6 +20,10 @@ RUN a2enmod proxy_wstunnel
 RUN docker-php-ext-install sockets
 
 RUN docker-php-ext-configure pcntl --enable-pcntl && docker-php-ext-install pcntl
+
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg=/usr/include/ --enable-gd
+RUN docker-php-ext-install gd
+RUN docker-php-ext-enable gd
 
 COPY VtigerTest.php /var/www/html/VtigerTest.php
 COPY debug.sh /usr/local/bin/debug
