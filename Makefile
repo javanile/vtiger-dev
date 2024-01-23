@@ -71,3 +71,6 @@ test-foreground: pull update up
 
 test-gd: build
 	docker compose run --rm vtiger php -r "imagejpeg();"
+
+test-phpdbg: build
+	docker compose run --rm vtiger phpdbg
