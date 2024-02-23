@@ -31,6 +31,12 @@ COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY xdebug-test.php /var/www/html/xdebug-test.php
 COPY websocket-test.php /var/www/html/websocket-test.php
 
+RUN apt-get -y update && \
+    apt-get install -y zlib1g-dev libicu-dev g++ && \
+    docker-php-ext-configure intl && \
+    docker-php-ext-install intl && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 RUN a2enmod proxy_http && a2enmod proxy_wstunnel && a2enmod rewrite
 
 RUN sed -i /etc/apache2/sites-available/000-default.conf -e 's/<\/VirtualHost>/    ProxyPassMatch "\/websocket-(52[0-2][0-9][0-9])" "ws:\/\/0.0.0.0:52000" nocanon\n<\/VirtualHost>/g'

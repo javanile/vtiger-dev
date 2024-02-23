@@ -1,5 +1,10 @@
 FROM javanile/vtiger:7.1.0
 
+RUN apt-get update && apt-get install -y zlib1g-dev libicu-dev g++ icu-devtools libicu63
+RUN find / -name icu-config && exit 1
+RUN docker-php-ext-configure intl
+RUN docker-php-ext-install intl
+
 RUN apt-get update && apt-get -y upgrade && \
     apt-get install -y --no-install-recommends rsync inotify-tools wget zip unzip vim nano iputils-ping libxml2-dev gettext mariadb-client libldap2-dev tidy libtidy-dev libmagick++-dev libmagickwand-dev libpq-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libonig-dev && \
    	ln -s /usr/lib/x86_64-linux-gnu/libldap.so /usr/lib/libldap.so && \
@@ -30,6 +35,13 @@ COPY debug.sh /usr/local/bin/debug
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY xdebug-test.php /var/www/html/xdebug-test.php
 COPY websocket-test.php /var/www/html/websocket-test.php
+
+RUN apt-get -y update && \
+    apt-get install -y zlib1g-dev libicu-dev g++
+RUN  icu-config --version && exit 1
+RUN docker-php-ext-configure intl
+RUN docker-php-ext-install intl
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN a2enmod proxy_http && a2enmod proxy_wstunnel && a2enmod rewrite
 
