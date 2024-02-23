@@ -76,4 +76,4 @@ test-phpdbg: build
 	docker compose run --rm vtiger phpdbg
 
 test-intl: build
-	@docker compose run --rm vtiger php -r "new Spoofchecker();"
+	@docker compose run --rm vtiger php -r "var_dump(new Spoofchecker());"
