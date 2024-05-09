@@ -6,13 +6,13 @@ RUN apt-get update && apt-get -y upgrade && \
    	docker-php-ext-install ldap tidy soap && \
 	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN	( pecl install -f xdebug-2.8.1 || pecl install -f xdebug-2.7.2 || pecl install -f xdebug-2.5.5 ) && docker-php-ext-enable xdebug
+RUN ( pecl install -f xdebug-2.8.1 || pecl install -f xdebug-2.7.2 || pecl install -f xdebug-2.5.5 ) && docker-php-ext-enable xdebug
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN curl -sL -o /usr/local/bin/phpcs https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar && chmod +x /usr/local/bin/phpcs
 RUN curl -sL -o /usr/local/bin/phpcbf https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar && chmod +x /usr/local/bin/phpcbf
 RUN curl -sLk -o /usr/local/bin/phpmd https://phpmd.org/static/latest/phpmd.phar && chmod +x /usr/local/bin/phpmd
-RUN curl https://phar.phpunit.de/phpunit-6.phar -skL -o /usr/local/bin/phpunit && chmod +x /usr/local/bin/phpunit
+RUN curl https://phar.phpunit.de/phpunit-8.phar -skL -o /usr/local/bin/phpunit && chmod +x /usr/local/bin/phpunit
 RUN curl -sL https://raw.githubusercontent.com/javanile/inotifywait-polling/main/setup.sh | bin=/usr/local/bin/inotifywait-polling bash -
 
 RUN a2enmod proxy_wstunnel
@@ -41,9 +41,10 @@ RUN a2enmod proxy_http && a2enmod proxy_wstunnel && a2enmod rewrite
 
 RUN sed -i /etc/apache2/sites-available/000-default.conf -e 's/<\/VirtualHost>/    ProxyPassMatch "\/websocket-(52[0-2][0-9][0-9])" "ws:\/\/0.0.0.0:52000" nocanon\n<\/VirtualHost>/g'
 
-RUN pecl install pcov
+## Intall PCOV
+RUN pecl install pcov && docker-php-ext-enable pcov
 COPY pcov.sh /usr/local/bin/pcov
 RUN chmod +x /usr/local/bin/pcov
 
-
+## Add phpinfo file
 RUN echo "<?php phpinfo();" > /var/www/html/phpinfo.php
