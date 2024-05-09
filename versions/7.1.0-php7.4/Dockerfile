@@ -42,5 +42,8 @@ RUN a2enmod proxy_http && a2enmod proxy_wstunnel && a2enmod rewrite
 RUN sed -i /etc/apache2/sites-available/000-default.conf -e 's/<\/VirtualHost>/    ProxyPassMatch "\/websocket-(52[0-2][0-9][0-9])" "ws:\/\/0.0.0.0:52000" nocanon\n<\/VirtualHost>/g'
 
 RUN pecl install pcov
+COPY pcov.sh /usr/local/bin/pcov
+RUN chmod +x /usr/local/bin/pcov
+
 
 RUN echo "<?php phpinfo();" > /var/www/html/phpinfo.php

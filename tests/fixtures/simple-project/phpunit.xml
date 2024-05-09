@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="/app/tests/fixtures/simple-project/bootstrap.php" colors="true">
+    <filter>
+        <whitelist>
+            <directory>/app/tests/fixtures/simple-project/src/</directory>
+        </whitelist>
+    </filter>
+    <testsuites>
+        <testsuite name="Application Test Suite">
+            <directory>/app/tests/fixtures/simple-project/tests/</directory>
+        </testsuite>
+    </testsuites>
+    <logging>
+        <log type="coverage-crap4j" target="coverage.xml"/>
+    </logging>
+</phpunit>

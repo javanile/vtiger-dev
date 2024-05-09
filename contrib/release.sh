@@ -5,7 +5,7 @@ VERSION=0.$(date +%y.%U)
 
 docker login --username yafb
 
-source versions.sh
+source contrib/versions.sh
 
 for version in "${versions[@]}"; do
   docker build -t "javanile/vtiger-dev:${version}" "versions/${version}"

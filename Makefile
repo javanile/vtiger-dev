@@ -79,4 +79,6 @@ test-intl: build
 	@docker compose run --rm vtiger php -r "var_dump(new Spoofchecker());"
 
 test-pcov: build
-	docker compose run --rm vtiger pcov --coverage-html=tmp/coverage-report .
+	docker compose run --rm vtiger pcov tests/fixtures/simple-project \
+		--config=tests/fixtures/simple-project/phpunit.xml \
+		--coverage-html=tests/fixtures/simple-project/coverage
