@@ -20,7 +20,7 @@ debug: up
 	docker-compose exec vtiger debug
 
 release: update
-	bash release.sh
+	bash contrib/release.sh
 
 xdebug: up
 	docker-compose logs -f xdebug
