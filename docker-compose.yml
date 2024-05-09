@@ -3,7 +3,7 @@ version: '3'
 services:
 
   vtiger:
-    build: ${version}
+    build: versions/${version}
     image: javanile/vtiger-dev:${version}
     environment:
       - VT_ENV=dev
@@ -31,7 +31,7 @@ services:
       - MYSQL_DATABASE=vtiger
       - MYSQL_ROOT_PASSWORD=secret
     volumes:
-      - ./dataset:/dataset:rw
+      - ./tests/dataset:/dataset:rw
       - mysql:/var/lib/mysql:rw
 
   phpmyadmin:

@@ -1,5 +1,6 @@
 <?php
 
+namespace 7.1.0 - php7.4;
 use PHPUnit\Framework\TestCase;
 
 class VtigerTest extends TestCase

@@ -2,7 +2,7 @@
 .PHONY: debug
 
 update:
-	bash update.sh
+	bash contrib/update.sh
 
 build: update
 	docker-compose build vtiger
@@ -77,3 +77,6 @@ test-phpdbg: build
 
 test-intl: build
 	@docker compose run --rm vtiger php -r "var_dump(new Spoofchecker());"
+
+test-pcov: build
+	docker compose run --rm vtiger pcov --coverage-html=tmp/coverage-report .

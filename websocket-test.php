@@ -165,7 +165,7 @@ class WebSocketServer
     }
 }
 
-$webSocketServer = new WebSocketServer();
+$webSocketServer = new \WebSocketServer();
 
 $socketResource = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 socket_set_option($socketResource, SOL_SOCKET, SO_REUSEADDR, 1);

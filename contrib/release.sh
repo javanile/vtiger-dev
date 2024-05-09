@@ -8,8 +8,8 @@ docker login --username yafb
 source versions.sh
 
 for version in "${versions[@]}"; do
-  docker build -t javanile/vtiger-dev:${version} ${version}
-  docker push javanile/vtiger-dev:${version}
+  docker build -t "javanile/vtiger-dev:${version}" "versions/${version}"
+  docker push "javanile/vtiger-dev:${version}"
 done
 
 git add .
